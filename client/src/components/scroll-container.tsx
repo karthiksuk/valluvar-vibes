@@ -16,39 +16,38 @@ export function ScrollContainer({ kurals: initialKurals, hasMore: initialHasMore
   const [page, setPage] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
   const [allKurals, setAllKurals] = useState<Kural[]>([]);
+  const [hasMore, setHasMore] = useState(initialHasMore);
 
   // Initialize allKurals when initialKurals change
   useEffect(() => {
     if (initialKurals.length > 0) {
       setAllKurals(prevKurals => {
-        // Only add new kurals that aren't already in the list
-        const newKurals = initialKurals.filter(
-          newKural => !prevKurals.some(existingKural => existingKural.id === newKural.id)
-        );
+        const existingIds = new Set(prevKurals.map(k => k.id));
+        const newKurals = initialKurals.filter(kural => !existingIds.has(kural.id));
         return [...prevKurals, ...newKurals];
       });
+      setHasMore(initialHasMore);
     }
-  }, [initialKurals]);
+  }, [initialKurals, initialHasMore]);
 
   // Fetch next page of kurals
-  const { data: nextPageData, isFetching } = useQuery<{ kurals: Kural[]; hasMore: boolean }>({
+  const { data: nextPageData, isFetching } = useQuery({
     queryKey: ["/api/kurals", { page: page + 1 }],
-    enabled: currentIndex >= allKurals.length - 2 && initialHasMore,
+    enabled: hasMore && currentIndex >= (allKurals.length - 5),
   });
 
   // Update allKurals when new data arrives
   useEffect(() => {
-    if (nextPageData?.kurals && !isFetching && currentIndex >= allKurals.length - 2) {
+    if (nextPageData?.kurals && nextPageData?.hasMore !== undefined) {
       setAllKurals(prev => {
-        // Only add new kurals that aren't already in the list
-        const newKurals = nextPageData.kurals.filter(
-          newKural => !prev.some(existingKural => existingKural.id === newKural.id)
-        );
+        const existingIds = new Set(prev.map(k => k.id));
+        const newKurals = nextPageData.kurals.filter(kural => !existingIds.has(kural.id));
         return [...prev, ...newKurals];
       });
+      setHasMore(nextPageData.hasMore);
       setPage(p => p + 1);
     }
-  }, [nextPageData, isFetching, currentIndex, allKurals.length]);
+  }, [nextPageData]);
 
   const handleScroll = useCallback(() => {
     if (!containerRef.current) return;
@@ -58,15 +57,19 @@ export function ScrollContainer({ kurals: initialKurals, hasMore: initialHasMore
     const cardHeight = container.clientHeight;
     const newIndex = Math.floor(scrollPosition / cardHeight);
 
+    // Only update if we have a valid new index
     if (newIndex !== currentIndex && newIndex >= 0 && newIndex < allKurals.length) {
       setCurrentIndex(newIndex);
 
-      // If we're near the end, this will trigger the next page fetch
-      if (newIndex >= allKurals.length - 2) {
-        console.log('Near end, should fetch more:', { newIndex, total: allKurals.length });
+      // Pre-fetch next page when we're getting close to the end
+      if (hasMore && newIndex >= allKurals.length - 5) {
+        console.log('Near end, should fetch more:', { 
+          currentIndex: newIndex, 
+          total: allKurals.length 
+        });
       }
     }
-  }, [currentIndex, allKurals.length]);
+  }, [currentIndex, allKurals.length, hasMore]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -102,7 +105,7 @@ export function ScrollContainer({ kurals: initialKurals, hasMore: initialHasMore
             />
           </motion.div>
         ))}
-        {isFetching && (
+        {(isFetching && hasMore) && (
           <motion.div
             className="snap-start h-screen"
             initial={{ opacity: 0 }}
