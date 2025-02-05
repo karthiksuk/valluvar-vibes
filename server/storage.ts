@@ -39,6 +39,24 @@ export class MemStorage implements IStorage {
         tamil: "கற்றதனால் ஆய பயனென்கொல் வாலறிவன்\nநற்றாள் தொழாஅர் எனின்",
         english: "What profit have those derived from learning, if they worship not the good feet of Him who is pure knowledge?",
         backgroundImage: BACKGROUND_IMAGES[1]
+      },
+      {
+        number: 3,
+        tamil: "மலர்மிசை ஏகினான் மாணடி சேர்ந்தார்\nநிலமிசை நீடுவாழ் வார்",
+        english: "Long live they on earth who reach the feet of Him who walks upon the flower of the mind.",
+        backgroundImage: BACKGROUND_IMAGES[2]
+      },
+      {
+        number: 4,
+        tamil: "வேண்டுதல் வேண்டாமை இலானடி சேர்ந்தார்க்கு\nயாண்டும் இடும்பை இல",
+        english: "To those who reach the feet of Him who is free from desire or dislike, there is no distress forever.",
+        backgroundImage: BACKGROUND_IMAGES[3]
+      },
+      {
+        number: 5,
+        tamil: "இருள்சேர் இருவினையும் சேரா இறைவன்\nபொருள்சேர் புகழ்புரிந்தார் மாட்டு",
+        english: "The two deeds that spring from darkness will not cling to those who delight in the true praise of God.",
+        backgroundImage: BACKGROUND_IMAGES[4]
       }
     ];
 
@@ -66,7 +84,7 @@ export class MemStorage implements IStorage {
   async updateKuralInterpretation(id: number, interpretation: string): Promise<Kural> {
     const kural = await this.getKural(id);
     if (!kural) throw new Error("Kural not found");
-    
+
     const updatedKural = { ...kural, aiInterpretation: interpretation };
     this.kurals.set(id, updatedKural);
     return updatedKural;
