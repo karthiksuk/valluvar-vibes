@@ -35,8 +35,11 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
             <div className="space-y-6">
               <div className="space-y-2">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-medium text-primary/80">Thirukkural</span>
-                  <Badge variant="outline" className="text-xs">
+                  <span className="text-sm font-medium text-primary">Thirukkural</span>
+                  <Badge 
+                    variant="secondary"
+                    className="text-xs font-medium bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15"
+                  >
                     {kural.section}
                   </Badge>
                 </div>
@@ -55,7 +58,7 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
                 <div className="w-full border-t border-gray-200"></div>
               </div>
               <div className="relative flex justify-start">
-                <span className="pr-3 bg-gradient-to-br from-white to-gray-50 text-sm font-medium text-primary/80">
+                <span className="pr-3 bg-gradient-to-br from-white to-gray-50 text-sm font-medium text-primary">
                   Modern Interpretation
                 </span>
               </div>
