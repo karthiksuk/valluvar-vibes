@@ -181,7 +181,7 @@ export function ScrollContainer({
 
       <div
         ref={containerRef}
-        className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth"
+        className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-background"
         onScroll={handleScroll}
       >
         <AnimatePresence>
