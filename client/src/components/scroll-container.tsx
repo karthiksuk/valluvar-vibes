@@ -126,14 +126,23 @@ export function ScrollContainer({
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button
-            variant="outline"
-            size="sm"
-            className="fixed top-4 right-4 z-50"
-          >
-            <Search className="w-4 h-4 mr-2" />
-            Go to Kural
-          </Button>
+          <div className="fixed top-4 right-4 z-50 flex flex-col items-end gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+            >
+              <Search className="w-4 h-4 mr-2" />
+              Go to Kural
+            </Button>
+            <a
+              href="https://github.com/tk120404/thirukkural"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-gray-500 hover:text-primary transition-colors"
+            >
+              Thirukkural data source
+            </a>
+          </div>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
