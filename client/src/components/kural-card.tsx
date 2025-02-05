@@ -27,17 +27,17 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full h-full flex items-start pt-[6vh] md:pt-[3vh]" // Further reduced top padding
+      className="w-full h-full flex items-center justify-center"
     >
       <Card className="w-full h-full relative overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 shadow-none rounded-none">
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-[0.03] mix-blend-overlay animate-gradient"
           style={{ backgroundImage: `url(${kural.backgroundImage})` }}
         />
-        <CardContent className="h-full flex flex-col max-w-3xl mx-auto px-6 pb-20 md:pb-24 relative z-10">
-          <div className="space-y-5 mt-0"> {/* Removed top margin */}
-            <div className="space-y-4">
-              <div className="space-y-1.5">
+        <CardContent className="h-full flex flex-col justify-center max-w-3xl mx-auto px-6 pb-24 pt-12 md:px-12 md:pb-32 relative z-10">
+          <div className="space-y-8 scrollbar-hide">
+            <div className="space-y-6">
+              <div className="space-y-2">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-sm font-medium text-primary/80">Thirukkural</span>
                   <Badge 
@@ -51,7 +51,7 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
                   <h2 className="text-3xl md:text-4xl font-bold text-slate-100">#{kural.number}</h2>
                 </div>
               </div>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <p className="text-xl md:text-2xl font-medium leading-relaxed whitespace-pre-line text-slate-200 font-serif">{kural.tamil}</p>
                 <p className="text-base md:text-lg leading-relaxed text-slate-300">{kural.english}</p>
               </div>
@@ -87,7 +87,7 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
           </div>
 
           <motion.div 
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-slate-500 md:bottom-10" // Adjusted bottom position
+            className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-slate-500 md:bottom-16"
             initial={{ opacity: 0.5 }}
             animate={{ 
               opacity: [0.5, 1, 0.5],
@@ -103,7 +103,6 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
           </motion.div>
         </CardContent>
       </Card>
-
     </motion.div>
   );
 }
