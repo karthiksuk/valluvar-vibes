@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Search, Github } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle"; // Import the ThemeToggle component
 
 interface ScrollContainerProps {
   kurals: Kural[];
@@ -21,11 +22,11 @@ interface ScrollContainerProps {
   onKuralChange?: (kuralNumber: number) => void;
 }
 
-export function ScrollContainer({ 
-  kurals, 
-  isLoading, 
+export function ScrollContainer({
+  kurals,
+  isLoading,
   initialKuralNumber = 1,
-  onKuralChange 
+  onKuralChange
 }: ScrollContainerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -127,13 +128,17 @@ export function ScrollContainer({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <div className="fixed top-4 right-4 z-50 flex flex-col items-end gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-            >
-              <Search className="w-4 h-4 mr-2" />
-              Go to Kural
-            </Button>
+            <div className="flex items-center gap-2">
+              <ThemeToggle /> {/* Added ThemeToggle component */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsDialogOpen(true)}
+              >
+                <Search className="w-4 h-4 mr-2" />
+                Go to Kural
+              </Button>
+            </div>
           </div>
         </DialogTrigger>
         <DialogContent>
@@ -169,9 +174,9 @@ export function ScrollContainer({
 
       {/* Developer credit moved to bottom left */}
       <div className="fixed bottom-4 left-4 z-50 text-[10px] sm:text-xs text-gray-500">
-        Developed by <a 
-          href="https://twitter.com/karthikeyansuku" 
-          target="_blank" 
+        Developed by <a
+          href="https://twitter.com/karthikeyansuku"
+          target="_blank"
           rel="noopener noreferrer"
           className="text-primary hover:underline"
         >
@@ -181,14 +186,14 @@ export function ScrollContainer({
 
       <div
         ref={containerRef}
-        className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth"
+        className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-background"
         onScroll={handleScroll}
       >
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           {kurals.map((kural, index) => (
             <motion.div
               key={kural.id}
-              className="snap-start h-screen"
+              className="snap-start h-screen bg-background"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
