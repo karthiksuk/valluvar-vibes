@@ -20,16 +20,16 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  app.get("/api/kurals/:id/interpretation", async (req, res) => {
+  app.get("/api/kurals/:number/interpretation", async (req, res) => {
     try {
-      const id = parseInt(req.params.id);
-      const kural = thirukkuralData.find(k => k.number === id);
+      const number = parseInt(req.params.number);
+      const kural = thirukkuralData.find(k => k.number === number);
 
       if (!kural) {
         return res.status(404).json({ message: "Kural not found" });
       }
 
-      console.log(`Generating interpretation for Kural #${id}`);
+      console.log(`Generating interpretation for Kural #${number}`);
       const interpretation = await generateKuralInterpretation(
         kural.tamil,
         kural.english
@@ -40,7 +40,7 @@ export function registerRoutes(app: Express): Server {
       }
 
       res.json({ interpretation });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to generate interpretation:", error);
       res.status(500).json({ 
         message: "Failed to generate interpretation",

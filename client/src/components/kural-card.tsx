@@ -16,8 +16,11 @@ interface InterpretationResponse {
 
 export function KuralCard({ kural, isVisible }: KuralCardProps) {
   const { data: interpretationData, isLoading } = useQuery<InterpretationResponse>({
-    queryKey: [`/api/kurals/${kural.id}/interpretation`],
-    enabled: isVisible && !kural.aiInterpretation
+    queryKey: [`/api/kurals/${kural.number}/interpretation`],
+    enabled: isVisible && !kural.aiInterpretation,
+    staleTime: Infinity, // Once we have an interpretation, keep it
+    cacheTime: Infinity,
+    retry: 2,
   });
 
   const interpretation = kural.aiInterpretation || interpretationData?.interpretation;
