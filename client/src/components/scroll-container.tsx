@@ -31,14 +31,14 @@ export function ScrollContainer({ kurals: initialKurals, hasMore: initialHasMore
   }, [initialKurals, initialHasMore]);
 
   // Fetch next page of kurals
-  const { data: nextPageData, isFetching } = useQuery({
+  const { data: nextPageData, isFetching } = useQuery<{ kurals: Kural[]; hasMore: boolean }>({
     queryKey: ["/api/kurals", { page: page + 1 }],
     enabled: hasMore && currentIndex >= (allKurals.length - 5),
   });
 
   // Update allKurals when new data arrives
   useEffect(() => {
-    if (nextPageData?.kurals && nextPageData?.hasMore !== undefined) {
+    if (nextPageData?.kurals) {
       setAllKurals(prev => {
         const existingIds = new Set(prev.map(k => k.id));
         const newKurals = nextPageData.kurals.filter(kural => !existingIds.has(kural.id));
@@ -46,6 +46,14 @@ export function ScrollContainer({ kurals: initialKurals, hasMore: initialHasMore
       });
       setHasMore(nextPageData.hasMore);
       setPage(p => p + 1);
+
+      // Log the update
+      console.log('Updated kurals:', {
+        previousCount: allKurals.length,
+        newCount: allKurals.length + nextPageData.kurals.length,
+        page: page + 1,
+        hasMore: nextPageData.hasMore
+      });
     }
   }, [nextPageData]);
 
@@ -55,21 +63,28 @@ export function ScrollContainer({ kurals: initialKurals, hasMore: initialHasMore
     const container = containerRef.current;
     const scrollPosition = container.scrollTop;
     const cardHeight = container.clientHeight;
+    const scrollHeight = container.scrollHeight;
     const newIndex = Math.floor(scrollPosition / cardHeight);
 
     // Only update if we have a valid new index
     if (newIndex !== currentIndex && newIndex >= 0 && newIndex < allKurals.length) {
       setCurrentIndex(newIndex);
-
-      // Pre-fetch next page when we're getting close to the end
-      if (hasMore && newIndex >= allKurals.length - 5) {
-        console.log('Near end, should fetch more:', { 
-          currentIndex: newIndex, 
-          total: allKurals.length 
-        });
-      }
     }
-  }, [currentIndex, allKurals.length, hasMore]);
+
+    // Check if we're near the end (within 2 cards from the bottom)
+    const distanceToBottom = scrollHeight - (scrollPosition + cardHeight);
+    const threshold = cardHeight * 2;
+
+    if (hasMore && !isFetching && distanceToBottom < threshold) {
+      console.log('Near end, should fetch more:', { 
+        currentIndex: newIndex, 
+        total: allKurals.length,
+        page: page + 1,
+        distanceToBottom,
+        threshold
+      });
+    }
+  }, [currentIndex, allKurals.length, hasMore, isFetching, page]);
 
   useEffect(() => {
     const container = containerRef.current;
