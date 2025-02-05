@@ -23,11 +23,15 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full h-full flex items-center justify-center"
+      transition={{
+        duration: 0.5,
+        ease: "easeInOut"
+      }}
+      className="w-full h-full flex items-center justify-center bg-background"
     >
-      <Card className="w-full h-full relative overflow-hidden bg-gradient-to-br from-white to-gray-50 shadow-none rounded-none">
+      <Card className="w-full h-full relative overflow-hidden bg-gradient-to-br from-background to-background/50 shadow-none rounded-none border-0">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-[0.03] mix-blend-overlay animate-gradient"
+          className="absolute inset-0 bg-cover bg-center opacity-[0.03] mix-blend-overlay transition-opacity duration-500"
           style={{ backgroundImage: `url(${kural.backgroundImage})` }}
         />
         <CardContent className="h-full flex flex-col justify-center max-w-3xl mx-auto px-6 py-8 md:px-12 relative z-10">
@@ -44,22 +48,22 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
                   </Badge>
                 </div>
                 <div className="flex items-end gap-4">
-                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900">#{kural.number}</h2>
-                  <p className="text-sm text-gray-600 pb-1">{kural.chapter}</p>
+                  <h2 className="text-3xl md:text-4xl font-bold text-foreground">#{kural.number}</h2>
+                  <p className="text-sm text-muted-foreground pb-1">{kural.chapter}</p>
                 </div>
               </div>
               <div className="space-y-4">
-                <p className="text-xl md:text-2xl font-medium leading-relaxed whitespace-pre-line text-gray-900 font-serif">{kural.tamil}</p>
-                <p className="text-base md:text-lg leading-relaxed text-gray-700">{kural.english}</p>
+                <p className="text-xl md:text-2xl font-medium leading-relaxed whitespace-pre-line text-foreground font-serif">{kural.tamil}</p>
+                <p className="text-base md:text-lg leading-relaxed text-muted-foreground">{kural.english}</p>
               </div>
             </div>
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                <div className="w-full border-t border-gray-200"></div>
+                <div className="w-full border-t border-border"></div>
               </div>
               <div className="relative flex justify-start">
-                <span className="pr-3 bg-gradient-to-br from-white to-gray-50 text-sm font-medium text-primary/80">
+                <span className="pr-3 bg-gradient-to-br from-background to-background/50 text-sm font-medium text-primary/80">
                   Modern Interpretation
                 </span>
               </div>
@@ -68,15 +72,15 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
             <div className="pl-4 border-l-2 border-primary/20">
               {isLoading ? (
                 <div className="animate-pulse space-y-2">
-                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  <div className="h-4 bg-muted rounded w-3/4"></div>
+                  <div className="h-4 bg-muted rounded w-1/2"></div>
                 </div>
               ) : interpretation ? (
-                <p className="text-lg md:text-xl leading-relaxed text-gray-800 italic">
+                <p className="text-lg md:text-xl leading-relaxed text-foreground/90 italic">
                   {interpretation}
                 </p>
               ) : (
-                <p className="text-base md:text-lg text-gray-500">
+                <p className="text-base md:text-lg text-muted-foreground">
                   Generating a modern interpretation...
                 </p>
               )}
@@ -84,8 +88,8 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
           </div>
 
           <motion.div 
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-gray-400"
-            initial={{ opacity: 0.5 }}
+            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-muted-foreground"
+            initial={{ opacity: 0.5, y: 0 }}
             animate={{ 
               opacity: [0.5, 1, 0.5],
               y: [0, 5, 0]
