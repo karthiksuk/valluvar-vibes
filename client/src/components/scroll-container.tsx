@@ -156,16 +156,28 @@ export function ScrollContainer({
         </DialogContent>
       </Dialog>
 
-      {/* GitHub credit link moved to bottom */}
+      {/* GitHub credit link moved to bottom left */}
       <a
         href="https://github.com/tk120404/thirukkural"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 flex items-center gap-2 px-3 py-1.5 text-[10px] sm:text-xs bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors"
+        className="fixed bottom-4 left-4 z-50 flex items-center gap-2 px-3 py-1.5 text-[10px] sm:text-xs bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors"
       >
         <Github className="w-3 h-3 sm:w-4 sm:h-4" />
         <span>Thirukkural Dataset Source</span>
       </a>
+
+      {/* Developer credit */}
+      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 text-[10px] sm:text-xs text-gray-500">
+        Developed by <a 
+          href="https://twitter.com/karthikeyansuku" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-primary hover:underline"
+        >
+          @karthikeyansuku
+        </a>
+      </div>
 
       <div
         ref={containerRef}
