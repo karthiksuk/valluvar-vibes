@@ -27,6 +27,19 @@ export function ScrollContainer({ kurals, isLoading }: ScrollContainerProps) {
     }
   }, [currentIndex, kurals.length]);
 
+  // Smooth scroll to a specific kural
+  const scrollToKural = useCallback((index: number) => {
+    if (!containerRef.current) return;
+
+    const container = containerRef.current;
+    const targetPosition = index * container.clientHeight;
+
+    container.scrollTo({
+      top: targetPosition,
+      behavior: 'smooth'
+    });
+  }, []);
+
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
@@ -35,6 +48,22 @@ export function ScrollContainer({ kurals, isLoading }: ScrollContainerProps) {
     }
   }, [handleScroll]);
 
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowDown' && currentIndex < kurals.length - 1) {
+        e.preventDefault();
+        scrollToKural(currentIndex + 1);
+      } else if (e.key === 'ArrowUp' && currentIndex > 0) {
+        e.preventDefault();
+        scrollToKural(currentIndex - 1);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentIndex, kurals.length, scrollToKural]);
+
   if (isLoading || kurals.length === 0) {
     return <LoadingCard />;
   }
@@ -42,7 +71,7 @@ export function ScrollContainer({ kurals, isLoading }: ScrollContainerProps) {
   return (
     <div
       ref={containerRef}
-      className="h-screen overflow-y-scroll snap-y snap-mandatory"
+      className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth"
       onScroll={handleScroll}
     >
       <AnimatePresence>

@@ -39,13 +39,9 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
                   <Badge variant="outline" className="text-xs">
                     {kural.section}
                   </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    {kural.chapterGroup}
-                  </Badge>
                 </div>
                 <div className="flex items-end gap-4">
                   <h2 className="text-3xl md:text-4xl font-bold text-gray-900">#{kural.number}</h2>
-                  <p className="text-sm text-gray-600 pb-1">{kural.chapter}</p>
                 </div>
               </div>
               <div className="space-y-4">
