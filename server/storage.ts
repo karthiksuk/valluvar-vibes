@@ -88,8 +88,47 @@ export class MemStorage implements IStorage {
         tamil: "பிறவிப் பெருங்கடல் நீந்துவர் நீந்தார்\nஇறைவன் அடிசேரா தார்",
         english: "None can swim the great sea of births but those who are united to the feet of God.",
         backgroundImage: BACKGROUND_IMAGES[3]
+      },
+      // Chapter 2: The Excellence of Rain
+      {
+        number: 11,
+        tamil: "வான்நின்று உலகம் வழங்கி வருதலால்\nதான்அமிழ்தம் என்றுணரற் பாற்று",
+        english: "The rain cloud, drawing from the sea, gives rain; thereby it provides food and is itself food for men.",
+        backgroundImage: BACKGROUND_IMAGES[4]
+      },
+      {
+        number: 12,
+        tamil: "துப்பார்க்குத் துப்பாய துப்பாக்கித் துப்பார்க்குத்\nதுப்பாய தூஉம் மழை",
+        english: "Rain produces good food for the eaters, and is itself their food.",
+        backgroundImage: BACKGROUND_IMAGES[5]
+      },
+      // Chapter 3: The Greatness of Ascetics
+      {
+        number: 21,
+        tamil: "ஒழுக்காறாக் கொள்க ஒருவன்தன் நெஞ்சத்து\nஅழுக்காறு இலாத இயல்பு",
+        english: "Let him who would learn the virtue of the ascetic life keep his soul from the evil of envy.",
+        backgroundImage: BACKGROUND_IMAGES[0]
+      },
+      {
+        number: 22,
+        tamil: "செயற்கரிய செய்வார் பெரியர் சிறியர்\nசெயற்கரிய செய்கலா தார்",
+        english: "The great do mighty deeds; the mean cannot.",
+        backgroundImage: BACKGROUND_IMAGES[1]
+      },
+      // Chapter 4: Virtue
+      {
+        number: 31,
+        tamil: "சிறப்பீனும் செல்வம் பெறினும் பிறர்க்கின்னா\nசெய்யாமை மாசற்றார் கோள்",
+        english: "The spotless are they who, though they prosper, grieve not others, though they could.",
+        backgroundImage: BACKGROUND_IMAGES[2]
+      },
+      {
+        number: 32,
+        tamil: "அருள்செல்வம் செல்வத்துள் செல்வம் பொருள்செல்வம்\nபூரியார் கண்ணும் உள",
+        english: "Mercy is true wealth; material wealth may be found even with those who are destitute of virtue.",
+        backgroundImage: BACKGROUND_IMAGES[3]
       }
-      // Note: We can add more Kurals in batches as needed
+      // Note: We can continue adding more Kurals in batches as needed
     ];
 
     allKurals.forEach(kural => {
