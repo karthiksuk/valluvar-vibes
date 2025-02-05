@@ -5,7 +5,7 @@ const BACKGROUND_IMAGES = [
   "https://images.unsplash.com/photo-1459908676235-d5f02a50184b",
   "https://images.unsplash.com/photo-1577083552792-a0d461cb1dd6",
   "https://images.unsplash.com/photo-1578301978018-3005759f48f7",
-  "https://images.unsplash.com/photo-1503455637927-730bce8583c0",
+  "https://images.unsplash.com/photo-1503455637927-730bce583c0",
   "https://images.unsplash.com/photo-1487088678257-3a541e6e3922"
 ];
 
@@ -127,8 +127,85 @@ export class MemStorage implements IStorage {
         tamil: "அருள்செல்வம் செல்வத்துள் செல்வம் பொருள்செல்வம்\nபூரியார் கண்ணும் உள",
         english: "Mercy is true wealth; material wealth may be found even with those who are destitute of virtue.",
         backgroundImage: BACKGROUND_IMAGES[3]
+      },
+      // Chapter 5: Domestic Life
+      {
+        number: 41,
+        tamil: "இல்வாழ்வான் என்பான் இயல்புடைய மூவர்க்கும்\nநல்லாற்றின் நின்ற துணை",
+        english: "He who lives the domestic life supports the ascetic, the seeker of wisdom and those who cannot support themselves.",
+        backgroundImage: BACKGROUND_IMAGES[4]
+      },
+      {
+        number: 42,
+        tamil: "துறந்தார்க்கும் துவ்வா தவர்க்கும் இறந்தார்க்கும்\nஇல்வாழ்வான் என்பான் துணை",
+        english: "The householder supports ascetics, the poor and the dead (by performing their rites).",
+        backgroundImage: BACKGROUND_IMAGES[5]
+      },
+      // Chapter 6: The Good Wife
+      {
+        number: 51,
+        tamil: "மனைத்தக்க மாண்புடையள் ஆகித்தற் கொண்டான்\nவளத்தக்காள் வாழ்க்கைத் துணை",
+        english: "She who has the qualities proper to a wife, helps to lead a praiseworthy life in the home.",
+        backgroundImage: BACKGROUND_IMAGES[0]
+      },
+      {
+        number: 52,
+        tamil: "மனைமாட்சி இல்லாள்கண் இல்லாயின் வாழ்க்கை\nஎனைமாட்சித் தாயினும் இல்",
+        english: "If the wife lacks excellence, domestic life, however prosperous, is empty.",
+        backgroundImage: BACKGROUND_IMAGES[1]
+      },
+      // Chapter 7: Children
+      {
+        number: 61,
+        tamil: "பெறுமவற்றுள் யாமறிவ தில்லை அறிவறிந்த\nமக்கட்பேறு அல்ல பிற",
+        english: "Among all that men may acquire, we know not of any better than having learned children.",
+        backgroundImage: BACKGROUND_IMAGES[2]
+      },
+      {
+        number: 62,
+        tamil: "எழுபிறப்பும் தீயவை தீண்டா பழிபிறங்காப்\nபண்புடை மக்கட் பெறின்",
+        english: "Those who are blessed with good children will not be touched by evil through seven births.",
+        backgroundImage: BACKGROUND_IMAGES[3]
+      },
+      // Chapter 8: Love
+      {
+        number: 71,
+        tamil: "அன்பிற்கும் உண்டோ அடைக்குந்தாழ் ஆர்வலர்\nபுன்கணீர் பூசல் தரும்",
+        english: "Is there a bolt to shut in love? The tears of the affectionate will publish the love that is within.",
+        backgroundImage: BACKGROUND_IMAGES[4]
+      },
+      {
+        number: 72,
+        tamil: "அன்பிலார் எல்லாம் தமக்குரியர் அன்புடையார்\nஎன்பும் உரியர் பிறர்க்கு",
+        english: "The loveless belong only to themselves; the loving belong to others to their very bones.",
+        backgroundImage: BACKGROUND_IMAGES[5]
+      },
+      // Chapter 9: Hospitality
+      {
+        number: 81,
+        tamil: "விருந்து புறத்ததாத் தானுண்டல் சாவா\nமருந்தெனினும் வேண்டற்பாற் றன்று",
+        english: "To eat after keeping out a guest is not good, even if one were to eat the food of immortality.",
+        backgroundImage: BACKGROUND_IMAGES[0]
+      },
+      {
+        number: 82,
+        tamil: "செல்விருந்து ஓம்பி வருவிருந்து பார்த்திருப்பான்\nநல்விருந்து வானத் தவர்க்கு",
+        english: "He who, having entertained the guests that have come, looks out for others who may yet come, will be a welcome guest to the inhabitants of heaven.",
+        backgroundImage: BACKGROUND_IMAGES[1]
+      },
+      // Chapter 10: Pleasant Words
+      {
+        number: 91,
+        tamil: "இன்சொலால் ஈரம் அளைஇப் படிறிலவாம்\nசெம்பொருள் கண்டார்வாய்ச் சொல்",
+        english: "The words of the wise are like words of healing, born of kindness and free from deceit.",
+        backgroundImage: BACKGROUND_IMAGES[2]
+      },
+      {
+        number: 92,
+        tamil: "அகன்அமர்ந்து ஈதலின் நன்றே முகனமர்ந்து\nஇன்சொலன் ஆகப் பெறின்",
+        english: "Better than giving with a joyous heart is speaking with a joyous face.",
+        backgroundImage: BACKGROUND_IMAGES[3]
       }
-      // Note: We can continue adding more Kurals in batches as needed
     ];
 
     allKurals.forEach(kural => {
