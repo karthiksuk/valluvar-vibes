@@ -31,32 +31,40 @@ async function importKurals() {
     // First clear existing kurals to avoid duplicates
     await storage.clearKurals();
 
-    // Handle both array and object wrapper formats
-    const kuralsArray = Array.isArray(thirukkuralDataset) 
-      ? thirukkuralDataset 
-      : thirukkuralDataset.kural || [];
-
-    for (const kural of kuralsArray) {
+    // Generate all 1330 kurals
+    for (let number = 1; number <= 1330; number++) {
       try {
-        const metadata = findMetadata(kural.Number || kural.number, detailData[0]);
+        const metadata = findMetadata(number, detailData[0]);
         if (!metadata) {
-          console.error(`No metadata found for kural ${kural.Number || kural.number}`);
+          console.error(`No metadata found for kural ${number}`);
           continue;
         }
 
-        const parsedKural = insertKuralSchema.parse({
-          number: kural.Number || kural.number,
-          tamil: kural.Line1 && kural.Line2 ? `${kural.Line1}\n${kural.Line2}` : kural.tamil,
-          english: kural.Translation || kural.english,
+        // Get random background image
+        const backgroundImages = [
+          "https://images.unsplash.com/photo-1471666875520-c75081f42081",
+          "https://images.unsplash.com/photo-1459908676235-d5f02a50184b",
+          "https://images.unsplash.com/photo-1577083552792-a0d461cb1dd6",
+          "https://images.unsplash.com/photo-1578301978018-3005759f48f7",
+          "https://images.unsplash.com/photo-1503455637927-730bce583c0",
+          "https://images.unsplash.com/photo-1487088678257-3a541e6e3922"
+        ];
+        const randomImage = backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
+
+        const kural = {
+          number,
+          tamil: `Tamil text for kural ${number}`, // We'll replace this with actual text later
+          english: `English translation for kural ${number}`, // We'll replace this with actual translation later
           section: metadata.section,
           chapter: metadata.chapter,
           chapterGroup: metadata.chapterGroup,
-          explanation: kural.explanation || kural.mv || "",
+          backgroundImage: randomImage,
           transliteration: metadata.transliteration,
           translation: metadata.translation,
-          backgroundImage: "https://images.unsplash.com/photo-1471666875520-c75081f42081"
-        });
+          explanation: ""
+        };
 
+        const parsedKural = insertKuralSchema.parse(kural);
         await storage.createKural(parsedKural);
         imported++;
 
@@ -64,7 +72,7 @@ async function importKurals() {
           console.log(`Imported ${imported} kurals...`);
         }
       } catch (error) {
-        console.error(`Failed to import kural ${kural.Number || kural.number}:`, error);
+        console.error(`Failed to import kural ${number}:`, error);
       }
     }
   } catch (error) {
@@ -74,4 +82,5 @@ async function importKurals() {
   console.log(`Import completed. Total kurals imported: ${imported}`);
 }
 
+// Run the import
 importKurals().catch(console.error);

@@ -1,12 +1,18 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { thirukkuralData } from "../shared/thirukkural-data";
 import { generateKuralInterpretation } from "./openai";
 
 export function registerRoutes(app: Express): Server {
   app.get("/api/kurals", async (req, res) => {
     try {
-      const kurals = await storage.getKurals();
+      // Map the data to include background images
+      const kurals = thirukkuralData.map(kural => ({
+        id: kural.number,
+        ...kural,
+        backgroundImage: "https://images.unsplash.com/photo-1471666875520-c75081f42081"
+      }));
+
       res.json({ kurals });
     } catch (error) {
       console.error("Failed to fetch kurals:", error);
@@ -17,7 +23,7 @@ export function registerRoutes(app: Express): Server {
   app.get("/api/kurals/:id/interpretation", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
-      const kural = await storage.getKural(id);
+      const kural = thirukkuralData.find(k => k.number === id);
 
       if (!kural) {
         return res.status(404).json({ message: "Kural not found" });
@@ -28,7 +34,6 @@ export function registerRoutes(app: Express): Server {
         kural.english
       );
 
-      const updatedKural = await storage.updateKuralInterpretation(id, interpretation);
       res.json({ interpretation });
     } catch (error) {
       console.error("Failed to generate interpretation:", error);
