@@ -70,16 +70,33 @@ export class MemStorage implements IStorage {
         tamil: "கண்ணின் துனித்தே கலங்கினாள் பூப்பின்\nவெண்ணீர் கலுழ்ந்தனள் அழுது",
         english: "Her eyes welled up with tears of joy at the sight of the first flowers blooming."
       },
-      // Add more Kurals representing different themes and chapters
       {
         number: 961,
         tamil: "தெய்வத்தான் ஆகா தெனினும் முயற்சிதன்\nமெய்வருத்தக் கூலி தரும்",
         english: "Though fate-divine should make your labour vain;\nEffort its labour's sure reward will gain."
+      },
+      // Adding more Kurals for testing scrolling
+      {
+        number: 50,
+        tamil: "வேண்டுதல் வேண்டாமை இலானடி சேர்ந்தார்க்கு\nயாண்டும் இடும்பை இல",
+        english: "Those who reach the feet of Him who is free from desire or aversion, shall never suffer from distress."
+      },
+      {
+        number: 423,
+        tamil: "அறத்திற்கே அன்புசார் பென்ப அறியார்\nமறத்திற்கும் அஃதே துணை",
+        english: "The ignorant say that love is a help to virtue only, but it is also a help to vice."
+      },
+      {
+        number: 753,
+        tamil: "அகழ்வாரைத் தாங்கும் நிலம்போலத் தம்மை\nஇகழ்வார்ப் பொறுத்தல் தலை",
+        english: "To bear with those who revile us, just as the earth bears up those who dig it, is the first of virtues."
       }
+      // Add more Kurals as needed...
     ];
 
-    // Shuffle the Kurals array
-    const shuffledKurals = this.shuffle(kuralsData);
+    // Create multiple copies of Kurals with different IDs for testing
+    const expandedKurals = [...Array(5)].flatMap(() => kuralsData);
+    const shuffledKurals = this.shuffle(expandedKurals);
 
     // Add shuffled Kurals to the map with random background images
     shuffledKurals.forEach(kural => {
@@ -103,7 +120,7 @@ export class MemStorage implements IStorage {
 
   async createKural(insertKural: InsertKural): Promise<Kural> {
     const id = this.currentId++;
-    const kural: Kural = {
+    const kural = {
       ...insertKural,
       id,
       aiInterpretation: null,

@@ -15,13 +15,13 @@ export function ScrollContainer({ kurals, isLoading }: ScrollContainerProps) {
 
   const handleScroll = () => {
     if (!containerRef.current) return;
-    
+
     const container = containerRef.current;
     const scrollPosition = container.scrollTop;
-    const cardHeight = window.innerHeight - 64; // Subtract header height
-    const newIndex = Math.round(scrollPosition / cardHeight);
-    
-    if (newIndex !== currentIndex) {
+    const cardHeight = container.clientHeight; 
+    const newIndex = Math.floor(scrollPosition / cardHeight);
+
+    if (newIndex !== currentIndex && newIndex >= 0 && newIndex < kurals.length) {
       setCurrentIndex(newIndex);
     }
   };
@@ -37,12 +37,19 @@ export function ScrollContainer({ kurals, isLoading }: ScrollContainerProps) {
           <LoadingCard />
         ) : (
           kurals.map((kural, index) => (
-            <div key={kural.id} className="snap-start">
+            <motion.div 
+              key={kural.id} 
+              className="snap-start h-screen"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
               <KuralCard
                 kural={kural}
                 isVisible={index === currentIndex}
               />
-            </div>
+            </motion.div>
           ))
         )}
       </AnimatePresence>
