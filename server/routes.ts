@@ -4,10 +4,11 @@ import { storage } from "./storage";
 import { generateKuralInterpretation } from "./openai";
 
 export function registerRoutes(app: Express): Server {
-  app.get("/api/kurals", async (_req, res) => {
+  app.get("/api/kurals", async (req, res) => {
     try {
-      const kurals = await storage.getKurals();
-      res.json(kurals);
+      const page = parseInt(req.query.page as string) || 1;
+      const { kurals, hasMore } = await storage.getKurals(page);
+      res.json({ kurals, hasMore });
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch kurals" });
     }

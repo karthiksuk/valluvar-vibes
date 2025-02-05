@@ -22,7 +22,7 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-full h-screen flex items-center justify-center p-0"
+      className="w-full h-full flex items-center justify-center"
     >
       <Card className="w-full h-full relative overflow-hidden bg-gradient-to-br from-white to-gray-50 shadow-none rounded-none">
         <div 
@@ -30,7 +30,7 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
           style={{ backgroundImage: `url(${kural.backgroundImage})` }}
         />
         <CardContent className="h-full flex flex-col justify-center max-w-3xl mx-auto px-6 py-8 md:px-12 relative z-10">
-          <div className="max-h-[calc(100vh-4rem)] overflow-y-auto space-y-8 scrollbar-hide">
+          <div className="space-y-8 scrollbar-hide">
             <div className="space-y-6">
               <div className="space-y-2">
                 <span className="text-sm font-medium text-primary/80">Thirukkural</span>
