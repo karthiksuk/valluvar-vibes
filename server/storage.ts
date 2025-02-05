@@ -1,4 +1,6 @@
 import { kurals, type Kural, type InsertKural } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 const BACKGROUND_IMAGES = [
   "https://images.unsplash.com/photo-1471666875520-c75081f42081",
@@ -20,124 +22,44 @@ export interface IStorage {
   updateKuralInterpretation(id: number, interpretation: string): Promise<Kural>;
 }
 
-export class MemStorage implements IStorage {
-  private kurals: Map<number, Kural>;
-  currentId: number;
-
-  constructor() {
-    this.kurals = new Map();
-    this.currentId = 1;
-    this.initializeKurals();
-  }
-
+export class DatabaseStorage implements IStorage {
   private getRandomBackgroundImage(): string {
     return BACKGROUND_IMAGES[Math.floor(Math.random() * BACKGROUND_IMAGES.length)];
   }
 
-  private shuffle<T>(array: T[]): T[] {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  }
-
-  private initializeKurals() {
-    const kuralsData = [
-      {
-        number: 1,
-        tamil: "அகர முதல எழுத்தெல்லாம் ஆதி\nபகவன் முதற்றே உலகு",
-        english: "A, as its first of letters, every speech maintains;\nThe Primal Deity is first through all the world's domains."
-      },
-      {
-        number: 325,
-        tamil: "அருளல்லது யாதெனின் கொல்லாமை கோறல்\nபொருளல்லது அவ்வூன் தினல்",
-        english: "What is kindness? It is not killing. What is not kindness? It is killing and eating the flesh of what you killed."
-      },
-      {
-        number: 37,
-        tamil: "அன்புடைமை ஆன்ற குடிப்பிறத்தல் வேந்தவாம்\nபண்புடைமை தூதுரைப்பான் பண்பு",
-        english: "Love, noble birth, grace - these are the qualities of a true messenger."
-      },
-      {
-        number: 746,
-        tamil: "அறிவினான் ஆகுவ துண்டோ பிறிதினோய்\nதன்னோய்போல் போற்றாக் கடை",
-        english: "What good is wisdom if one does not treat others' pain as one's own?"
-      },
-      {
-        number: 1200,
-        tamil: "கண்ணின் துனித்தே கலங்கினாள் பூப்பின்\nவெண்ணீர் கலுழ்ந்தனள் அழுது",
-        english: "Her eyes welled up with tears of joy at the sight of the first flowers blooming."
-      },
-      {
-        number: 961,
-        tamil: "தெய்வத்தான் ஆகா தெனினும் முயற்சிதன்\nமெய்வருத்தக் கூலி தரும்",
-        english: "Though fate-divine should make your labour vain;\nEffort its labour's sure reward will gain."
-      },
-      // Adding more Kurals for testing scrolling
-      {
-        number: 50,
-        tamil: "வேண்டுதல் வேண்டாமை இலானடி சேர்ந்தார்க்கு\nயாண்டும் இடும்பை இல",
-        english: "Those who reach the feet of Him who is free from desire or aversion, shall never suffer from distress."
-      },
-      {
-        number: 423,
-        tamil: "அறத்திற்கே அன்புசார் பென்ப அறியார்\nமறத்திற்கும் அஃதே துணை",
-        english: "The ignorant say that love is a help to virtue only, but it is also a help to vice."
-      },
-      {
-        number: 753,
-        tamil: "அகழ்வாரைத் தாங்கும் நிலம்போலத் தம்மை\nஇகழ்வார்ப் பொறுத்தல் தலை",
-        english: "To bear with those who revile us, just as the earth bears up those who dig it, is the first of virtues."
-      }
-      // Add more Kurals as needed...
-    ];
-
-    // Create multiple copies of Kurals with different IDs for testing
-    const expandedKurals = [...Array(5)].flatMap(() => kuralsData);
-    const shuffledKurals = this.shuffle(expandedKurals);
-
-    // Add shuffled Kurals to the map with random background images
-    shuffledKurals.forEach(kural => {
-      const id = this.currentId++;
-      this.kurals.set(id, {
-        ...kural,
-        id,
-        aiInterpretation: null,
-        backgroundImage: this.getRandomBackgroundImage()
-      });
-    });
-  }
-
   async getKurals(): Promise<Kural[]> {
-    return Array.from(this.kurals.values());
+    return await db.select().from(kurals).orderBy(kurals.number);
   }
 
   async getKural(id: number): Promise<Kural | undefined> {
-    return this.kurals.get(id);
+    const [kural] = await db.select().from(kurals).where(eq(kurals.id, id));
+    return kural;
   }
 
   async createKural(insertKural: InsertKural): Promise<Kural> {
-    const id = this.currentId++;
-    const kural = {
-      ...insertKural,
-      id,
-      aiInterpretation: null,
-      backgroundImage: this.getRandomBackgroundImage()
-    };
-    this.kurals.set(id, kural);
+    const [kural] = await db
+      .insert(kurals)
+      .values({
+        ...insertKural,
+        backgroundImage: this.getRandomBackgroundImage(),
+      })
+      .returning();
     return kural;
   }
 
   async updateKuralInterpretation(id: number, interpretation: string): Promise<Kural> {
-    const kural = await this.getKural(id);
-    if (!kural) throw new Error("Kural not found");
+    const [updatedKural] = await db
+      .update(kurals)
+      .set({ aiInterpretation: interpretation })
+      .where(eq(kurals.id, id))
+      .returning();
 
-    const updatedKural = { ...kural, aiInterpretation: interpretation };
-    this.kurals.set(id, updatedKural);
+    if (!updatedKural) {
+      throw new Error("Kural not found");
+    }
+
     return updatedKural;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

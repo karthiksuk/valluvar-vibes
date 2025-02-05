@@ -7,6 +7,10 @@ export const kurals = pgTable("kurals", {
   number: integer("number").notNull(),
   tamil: text("tamil").notNull(),
   english: text("english").notNull(),
+  section: text("section"),
+  chapter: text("chapter"),
+  chapterGroup: text("chapter_group"),
+  explanation: text("explanation"),
   aiInterpretation: text("ai_interpretation"),
   backgroundImage: text("background_image").notNull(),
 });
