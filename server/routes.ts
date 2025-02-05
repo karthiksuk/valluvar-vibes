@@ -1,28 +1,41 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { thirukkuralData } from "../shared/thirukkural-data";
 import { generateKuralInterpretation } from "./openai";
+
+const PAGE_SIZE = 100;
 
 export function registerRoutes(app: Express): Server {
   app.get("/api/kurals", async (req, res) => {
     try {
       const page = parseInt(req.query.page as string) || 1;
-      const { kurals, hasMore } = await storage.getKurals(page);
-      res.json({ kurals, hasMore });
+      const start = (page - 1) * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+
+      const kurals = thirukkuralData.slice(start, end).map(kural => ({
+        id: kural.number,
+        ...kural,
+        backgroundImage: "https://images.unsplash.com/photo-1471666875520-c75081f42081",
+        aiInterpretation: null
+      }));
+
+      res.json({ 
+        kurals,
+        hasMore: end < thirukkuralData.length
+      });
     } catch (error) {
+      console.error("Failed to fetch kurals:", error);
       res.status(500).json({ message: "Failed to fetch kurals" });
     }
   });
 
   app.get("/api/kurals/:id/interpretation", async (req, res) => {
     try {
-      const kural = await storage.getKural(parseInt(req.params.id));
+      const id = parseInt(req.params.id);
+      const kural = thirukkuralData.find(k => k.number === id);
+
       if (!kural) {
         return res.status(404).json({ message: "Kural not found" });
-      }
-
-      if (kural.aiInterpretation) {
-        return res.json({ interpretation: kural.aiInterpretation });
       }
 
       const interpretation = await generateKuralInterpretation(
@@ -30,13 +43,9 @@ export function registerRoutes(app: Express): Server {
         kural.english
       );
 
-      const updatedKural = await storage.updateKuralInterpretation(
-        kural.id,
-        interpretation
-      );
-
-      res.json({ interpretation: updatedKural.aiInterpretation });
+      res.json({ interpretation });
     } catch (error) {
+      console.error("Failed to generate interpretation:", error);
       res.status(500).json({ message: "Failed to generate interpretation" });
     }
   });

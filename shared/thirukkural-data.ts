@@ -63,29 +63,20 @@ export const thirukkuralData = [
     chapter: "நன்றி",
     chapterGroup: "இல்லறவியல்"
   },
-  // Add 1327 more kurals here following the same structure...  This is a placeholder.  Replace with the actual data.
   {
     number: 381,
-    tamil: "Placeholder Tamil text",
-    english: "Placeholder English translation",
+    tamil: "படைகுடி கூழ்அமைச்சு நட்புஅரண் ஆறும்\nஉடையான் அரசருள் ஏறு",
+    english: "Who owns these six - army, people, wealth, ministers, friends, fort -\nIs lion among kings who own them not.",
     section: "பொருட்பால்",
-    chapter: "Placeholder Chapter",
-    chapterGroup: "Placeholder Chapter Group"
+    chapter: "இறைமாட்சி",
+    chapterGroup: "அரசியல்"
   },
   {
     number: 1081,
-    tamil: "Placeholder Tamil text",
-    english: "Placeholder English translation",
+    tamil: "அறிதோறு அறியாமை கண்டற்றால் காமம்\nசெறிதோறும் சேயிழை மாட்டு",
+    english: "As folly meets his view the more he learns,\nTo him who loveth more and more, his loved one's sweetness shows increase each hour.",
     section: "காமத்துப்பால்",
-    chapter: "Placeholder Chapter",
-    chapterGroup: "Placeholder Chapter Group"
-  },
-  {
-    number: 1330,
-    tamil: "Placeholder Tamil text",
-    english: "Placeholder English translation",
-    section: "காமத்துப்பால்",
-    chapter: "Placeholder Chapter",
-    chapterGroup: "Placeholder Chapter Group"
+    chapter: "தகையணங்குறுத்தல்",
+    chapterGroup: "களவியல்"
   }
 ] as const;
