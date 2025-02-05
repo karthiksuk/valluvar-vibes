@@ -3,6 +3,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { Kural } from "@shared/schema";
 import { KuralCard } from "./kural-card";
 import { LoadingCard } from "./loading-card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Search } from "lucide-react";
 
 interface ScrollContainerProps {
   kurals: Kural[];
@@ -18,6 +28,8 @@ export function ScrollContainer({
   onKuralChange 
 }: ScrollContainerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [kuralNumber, setKuralNumber] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Initialize to correct kural
@@ -65,6 +77,23 @@ export function ScrollContainer({
     });
   }, []);
 
+  // Handle kural number input submission
+  const handleGoToKural = (e: React.FormEvent) => {
+    e.preventDefault();
+    const number = parseInt(kuralNumber);
+    if (!number || number < 1 || number > kurals.length) {
+      alert(`Please enter a valid kural number between 1 and ${kurals.length}`);
+      return;
+    }
+
+    const index = kurals.findIndex(k => k.number === number);
+    if (index !== -1) {
+      scrollToKural(index);
+      setIsDialogOpen(false);
+      setKuralNumber("");
+    }
+  };
+
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
@@ -94,28 +123,61 @@ export function ScrollContainer({
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth"
-      onScroll={handleScroll}
-    >
-      <AnimatePresence>
-        {kurals.map((kural, index) => (
-          <motion.div
-            key={kural.id}
-            className="snap-start h-screen"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+    <>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            className="fixed top-4 right-4 z-50"
           >
-            <KuralCard
-              kural={kural}
-              isVisible={index === currentIndex}
+            <Search className="w-4 h-4 mr-2" />
+            Go to Kural
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Go to Kural</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleGoToKural} className="space-y-4">
+            <Input
+              type="number"
+              placeholder="Enter kural number"
+              min={1}
+              max={kurals.length}
+              value={kuralNumber}
+              onChange={(e) => setKuralNumber(e.target.value)}
             />
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    </div>
+            <Button type="submit" className="w-full">
+              Go
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <div
+        ref={containerRef}
+        className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth"
+        onScroll={handleScroll}
+      >
+        <AnimatePresence>
+          {kurals.map((kural, index) => (
+            <motion.div
+              key={kural.id}
+              className="snap-start h-screen"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <KuralCard
+                kural={kural}
+                isVisible={index === currentIndex}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+    </>
   );
 }
