@@ -1,5 +1,12 @@
 // This script generates a full dataset of 1330 kurals
-const kurals = [];
+const kurals: Array<{
+  number: number;
+  tamil: string;
+  english: string;
+  section: string;
+  chapter: string;
+  chapterGroup: string;
+}> = [];
 
 // Section 1: அறத்துப்பால் (1-380)
 for (let i = 1; i <= 380; i++) {
