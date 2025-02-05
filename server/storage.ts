@@ -20,6 +20,7 @@ export interface IStorage {
   getKural(id: number): Promise<Kural | undefined>;
   createKural(kural: InsertKural): Promise<Kural>;
   updateKuralInterpretation(id: number, interpretation: string): Promise<Kural>;
+  clearKurals(): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -77,6 +78,10 @@ export class DatabaseStorage implements IStorage {
     }
 
     return updatedKural;
+  }
+
+  async clearKurals(): Promise<void> {
+    await db.delete(kurals);
   }
 }
 
