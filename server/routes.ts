@@ -29,15 +29,23 @@ export function registerRoutes(app: Express): Server {
         return res.status(404).json({ message: "Kural not found" });
       }
 
+      console.log(`Generating interpretation for Kural #${id}`);
       const interpretation = await generateKuralInterpretation(
         kural.tamil,
         kural.english
       );
 
+      if (!interpretation) {
+        throw new Error("No interpretation generated");
+      }
+
       res.json({ interpretation });
     } catch (error) {
       console.error("Failed to generate interpretation:", error);
-      res.status(500).json({ message: "Failed to generate interpretation" });
+      res.status(500).json({ 
+        message: "Failed to generate interpretation",
+        error: error.message 
+      });
     }
   });
 

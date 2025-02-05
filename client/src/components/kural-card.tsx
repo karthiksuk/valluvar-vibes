@@ -10,8 +10,12 @@ interface KuralCardProps {
   isVisible: boolean;
 }
 
+interface InterpretationResponse {
+  interpretation: string;
+}
+
 export function KuralCard({ kural, isVisible }: KuralCardProps) {
-  const { data: interpretationData, isLoading } = useQuery({
+  const { data: interpretationData, isLoading } = useQuery<InterpretationResponse>({
     queryKey: [`/api/kurals/${kural.id}/interpretation`],
     enabled: isVisible && !kural.aiInterpretation
   });
@@ -43,13 +47,9 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
                   <Badge variant="outline" className="text-xs">
                     {kural.section}
                   </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    {kural.chapterGroup}
-                  </Badge>
                 </div>
                 <div className="flex items-end gap-4">
                   <h2 className="text-3xl md:text-4xl font-bold text-foreground">#{kural.number}</h2>
-                  <p className="text-sm text-muted-foreground pb-1">{kural.chapter}</p>
                 </div>
               </div>
               <div className="space-y-4">

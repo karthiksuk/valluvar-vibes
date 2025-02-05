@@ -8,6 +8,7 @@ export async function generateKuralInterpretation(
   english: string
 ): Promise<string> {
   try {
+    console.log("Generating interpretation for:", { tamil, english });
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
@@ -24,7 +25,12 @@ export async function generateKuralInterpretation(
       max_tokens: 150
     });
 
-    return response.choices[0].message.content || "Could not generate interpretation";
+    const interpretation = response.choices[0].message.content;
+    if (!interpretation) {
+      throw new Error("No interpretation generated");
+    }
+    console.log("Generated interpretation:", interpretation);
+    return interpretation;
   } catch (error) {
     console.error("OpenAI API error:", error);
     throw new Error("Failed to generate interpretation");
