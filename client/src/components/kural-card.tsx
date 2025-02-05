@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import type { Kural } from "@shared/schema";
+import { ChevronDown } from "lucide-react";
 
 interface KuralCardProps {
   kural: Kural;
@@ -25,19 +26,19 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
     >
       <Card className="w-full h-full relative overflow-hidden bg-gradient-to-br from-white to-gray-50 shadow-none rounded-none">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-[0.03] mix-blend-overlay"
+          className="absolute inset-0 bg-cover bg-center opacity-[0.03] mix-blend-overlay animate-gradient"
           style={{ backgroundImage: `url(${kural.backgroundImage})` }}
         />
-        <CardContent className="h-full flex flex-col justify-center max-w-3xl mx-auto p-12 relative z-10">
-          <div className="space-y-12">
-            <div className="space-y-8">
+        <CardContent className="h-full flex flex-col justify-center max-w-3xl mx-auto px-6 py-8 md:px-12 relative z-10">
+          <div className="max-h-[calc(100vh-4rem)] overflow-y-auto space-y-8 scrollbar-hide">
+            <div className="space-y-6">
               <div className="space-y-2">
                 <span className="text-sm font-medium text-primary/80">Thirukkural</span>
-                <h2 className="text-4xl font-bold text-gray-900">#{kural.number}</h2>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900">#{kural.number}</h2>
               </div>
-              <div className="space-y-6">
-                <p className="text-2xl font-medium leading-relaxed whitespace-pre-line text-gray-900 font-serif">{kural.tamil}</p>
-                <p className="text-lg leading-relaxed text-gray-700">{kural.english}</p>
+              <div className="space-y-4">
+                <p className="text-xl md:text-2xl font-medium leading-relaxed whitespace-pre-line text-gray-900 font-serif">{kural.tamil}</p>
+                <p className="text-base md:text-lg leading-relaxed text-gray-700">{kural.english}</p>
               </div>
             </div>
 
@@ -59,16 +60,32 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
                   <div className="h-4 bg-gray-200 rounded w-1/2"></div>
                 </div>
               ) : interpretation ? (
-                <p className="text-xl leading-relaxed text-gray-800 italic">
+                <p className="text-lg md:text-xl leading-relaxed text-gray-800 italic">
                   {interpretation}
                 </p>
               ) : (
-                <p className="text-lg text-gray-500">
+                <p className="text-base md:text-lg text-gray-500">
                   Generating a modern interpretation...
                 </p>
               )}
             </div>
           </div>
+
+          <motion.div 
+            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-gray-400"
+            initial={{ opacity: 0.5 }}
+            animate={{ 
+              opacity: [0.5, 1, 0.5],
+              y: [0, 5, 0]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            <ChevronDown className="w-6 h-6" />
+          </motion.div>
         </CardContent>
       </Card>
     </motion.div>
