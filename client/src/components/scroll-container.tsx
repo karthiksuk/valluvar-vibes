@@ -167,8 +167,8 @@ export function ScrollContainer({
         <span>Thirukkural Dataset Source</span>
       </a>
 
-      {/* Developer credit */}
-      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 text-[10px] sm:text-xs text-gray-500">
+      {/* Developer credit moved to bottom left */}
+      <div className="fixed bottom-4 left-4 z-50 text-[10px] sm:text-xs text-gray-500">
         Developed by <a 
           href="https://twitter.com/karthikeyansuku" 
           target="_blank" 
