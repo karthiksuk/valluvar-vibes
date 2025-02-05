@@ -19,8 +19,9 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
     queryKey: [`/api/kurals/${kural.number}/interpretation`],
     enabled: isVisible && !kural.aiInterpretation,
     staleTime: Infinity, // Once we have an interpretation, keep it
-    cacheTime: Infinity,
-    retry: 2,
+    gcTime: Infinity,
+    retry: 3, // Increase retry attempts
+    retryDelay: 1000, // Wait 1 second between retries
   });
 
   const interpretation = kural.aiInterpretation || interpretationData?.interpretation;

@@ -26,17 +26,15 @@ export function ScrollContainer({ kurals, isLoading }: ScrollContainerProps) {
     // Only update if we have a valid new index
     if (newIndex !== currentIndex && newIndex >= 0 && newIndex < kurals.length) {
       setCurrentIndex(newIndex);
-      setIsScrolling(true);
 
-      // Clear any existing timeout
+      // Set scrolling state with a shorter timeout
+      setIsScrolling(true);
       if (scrollTimeout.current) {
         clearTimeout(scrollTimeout.current);
       }
-
-      // Set a new timeout to mark scrolling as complete
       scrollTimeout.current = setTimeout(() => {
         setIsScrolling(false);
-      }, 150); // Adjust this value to control scroll sensitivity
+      }, 50); // Reduced from 100ms to 50ms for even faster interpretation loading
     }
   }, [currentIndex, kurals.length]);
 
