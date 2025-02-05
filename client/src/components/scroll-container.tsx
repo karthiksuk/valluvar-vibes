@@ -7,11 +7,35 @@ import { LoadingCard } from "./loading-card";
 interface ScrollContainerProps {
   kurals: Kural[];
   isLoading: boolean;
+  initialKuralNumber?: number;
+  onKuralChange?: (kuralNumber: number) => void;
 }
 
-export function ScrollContainer({ kurals, isLoading }: ScrollContainerProps) {
+export function ScrollContainer({ 
+  kurals, 
+  isLoading, 
+  initialKuralNumber = 1,
+  onKuralChange 
+}: ScrollContainerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Initialize to correct kural
+  useEffect(() => {
+    if (!isLoading && kurals.length > 0 && initialKuralNumber > 1) {
+      const index = kurals.findIndex(k => k.number === initialKuralNumber);
+      if (index !== -1) {
+        setCurrentIndex(index);
+        const container = containerRef.current;
+        if (container) {
+          container.scrollTo({
+            top: index * container.clientHeight,
+            behavior: 'auto'
+          });
+        }
+      }
+    }
+  }, [isLoading, kurals, initialKuralNumber]);
 
   const handleScroll = useCallback(() => {
     if (!containerRef.current) return;
@@ -24,8 +48,9 @@ export function ScrollContainer({ kurals, isLoading }: ScrollContainerProps) {
     // Only update if we have a valid new index
     if (newIndex !== currentIndex && newIndex >= 0 && newIndex < kurals.length) {
       setCurrentIndex(newIndex);
+      onKuralChange?.(kurals[newIndex].number);
     }
-  }, [currentIndex, kurals.length]);
+  }, [currentIndex, kurals.length, onKuralChange, kurals]);
 
   // Smooth scroll to a specific kural
   const scrollToKural = useCallback((index: number) => {
