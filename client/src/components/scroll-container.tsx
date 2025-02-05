@@ -181,18 +181,18 @@ export function ScrollContainer({
 
       <div
         ref={containerRef}
-        className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-background"
+        className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-background scrollbar-hide"
         onScroll={handleScroll}
       >
         <AnimatePresence>
           {kurals.map((kural, index) => (
             <motion.div
               key={kural.id}
-              className="snap-start h-screen"
+              className="snap-start h-screen bg-background"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
             >
               <KuralCard
                 kural={kural}

@@ -25,12 +25,12 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
       exit={{ opacity: 0 }}
       className="w-full h-full flex items-center justify-center"
     >
-      <Card className="w-full h-full relative overflow-hidden bg-gradient-to-br from-white to-gray-50 shadow-none rounded-none">
+      <Card className="w-full h-full relative overflow-hidden bg-gradient-to-br from-white to-gray-50 shadow-none rounded-none bg-background">
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-[0.03] mix-blend-overlay animate-gradient"
           style={{ backgroundImage: `url(${kural.backgroundImage})` }}
         />
-        <CardContent className="h-full flex flex-col justify-center max-w-3xl mx-auto px-6 py-8 md:px-12 relative z-10">
+        <CardContent className="h-full flex flex-col justify-center max-w-3xl mx-auto px-6 py-8 md:px-12 relative z-10 bg-background">
           <div className="space-y-8 scrollbar-hide">
             <div className="space-y-6">
               <div className="space-y-2">
@@ -90,9 +90,9 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
               y: [0, 5, 0]
             }}
             transition={{
-              duration: 2,
+              duration: 0.75, //Improved transition
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut" //Improved easing
             }}
           >
             <ChevronDown className="w-6 h-6" />
