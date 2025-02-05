@@ -1,6 +1,6 @@
 import { kurals, type Kural, type InsertKural } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, gte } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 const BACKGROUND_IMAGES = [
   "https://images.unsplash.com/photo-1471666875520-c75081f42081",
@@ -16,7 +16,7 @@ const BACKGROUND_IMAGES = [
 ];
 
 export interface IStorage {
-  getKurals(page?: number): Promise<{ kurals: Kural[]; hasMore: boolean }>;
+  getKurals(): Promise<Kural[]>;
   getKural(id: number): Promise<Kural | undefined>;
   createKural(kural: InsertKural): Promise<Kural>;
   updateKuralInterpretation(id: number, interpretation: string): Promise<Kural>;
@@ -24,30 +24,12 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
-  private readonly PAGE_SIZE = 100;
-
   private getRandomBackgroundImage(): string {
     return BACKGROUND_IMAGES[Math.floor(Math.random() * BACKGROUND_IMAGES.length)];
   }
 
-  async getKurals(page: number = 1): Promise<{ kurals: Kural[]; hasMore: boolean }> {
-    const offset = (page - 1) * this.PAGE_SIZE;
-
-    // Fetch one extra record to determine if there are more pages
-    const results = await db
-      .select()
-      .from(kurals)
-      .orderBy(kurals.number)
-      .limit(this.PAGE_SIZE + 1)
-      .offset(offset);
-
-    const hasMore = results.length > this.PAGE_SIZE;
-    const kuralsForPage = hasMore ? results.slice(0, -1) : results;
-
-    return {
-      kurals: kuralsForPage,
-      hasMore
-    };
+  async getKurals(): Promise<Kural[]> {
+    return db.select().from(kurals).orderBy(kurals.number);
   }
 
   async getKural(id: number): Promise<Kural | undefined> {
