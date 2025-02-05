@@ -1,6 +1,27 @@
-import { thirukkuralData } from "../shared/thirukkural-data";
 import { storage } from "./storage";
-import { insertKuralSchema } from "@shared/schema";
+import { insertKuralSchema, type ThirukkuralDetail } from "@shared/schema";
+import thirukkuralDataset from "../shared/thirukkural.json";
+import detailData from "../shared/detail.json";
+
+function findMetadata(number: number, details: ThirukkuralDetail) {
+  // Find the section, chapter group, and chapter for a given kural number
+  for (const section of details.section.detail) {
+    for (const chapterGroup of section.chapterGroup.detail) {
+      for (const chapter of chapterGroup.chapters.detail) {
+        if (number >= chapter.start && number <= chapter.end) {
+          return {
+            section: section.name,
+            chapterGroup: chapterGroup.name,
+            chapter: chapter.name,
+            translation: chapter.translation,
+            transliteration: chapter.transliteration
+          };
+        }
+      }
+    }
+  }
+  return null;
+}
 
 async function importKurals() {
   console.log("Starting Thirukkural import...");
@@ -10,12 +31,23 @@ async function importKurals() {
     // First clear existing kurals to avoid duplicates
     await storage.clearKurals();
 
-    for (const kural of thirukkuralData) {
+    for (const kural of thirukkuralDataset) {
       try {
+        const metadata = findMetadata(kural.number, detailData[0]);
+        if (!metadata) {
+          console.error(`No metadata found for kural ${kural.number}`);
+          continue;
+        }
+
         const parsedKural = insertKuralSchema.parse({
           ...kural,
-          explanation: "",  // Can be added later if needed
-          backgroundImage: "https://images.unsplash.com/photo-1471666875520-c75081f42081" // Using a default background for now
+          section: metadata.section,
+          chapter: metadata.chapter,
+          chapterGroup: metadata.chapterGroup,
+          explanation: kural.explanation || "",
+          transliteration: metadata.transliteration,
+          translation: metadata.translation,
+          backgroundImage: kural.backgroundImage || "https://images.unsplash.com/photo-1471666875520-c75081f42081"
         });
 
         await storage.createKural(parsedKural);

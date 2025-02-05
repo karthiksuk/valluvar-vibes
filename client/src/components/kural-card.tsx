@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import type { Kural } from "@shared/schema";
 import { ChevronDown } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface KuralCardProps {
   kural: Kural;
@@ -33,8 +34,19 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
           <div className="space-y-8 scrollbar-hide">
             <div className="space-y-6">
               <div className="space-y-2">
-                <span className="text-sm font-medium text-primary/80">Thirukkural</span>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900">#{kural.number}</h2>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-sm font-medium text-primary/80">Thirukkural</span>
+                  <Badge variant="outline" className="text-xs">
+                    {kural.section}
+                  </Badge>
+                  <Badge variant="outline" className="text-xs">
+                    {kural.chapterGroup}
+                  </Badge>
+                </div>
+                <div className="flex items-end gap-4">
+                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900">#{kural.number}</h2>
+                  <p className="text-sm text-gray-600 pb-1">{kural.chapter}</p>
+                </div>
               </div>
               <div className="space-y-4">
                 <p className="text-xl md:text-2xl font-medium leading-relaxed whitespace-pre-line text-gray-900 font-serif">{kural.tamil}</p>
