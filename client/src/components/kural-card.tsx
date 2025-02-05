@@ -10,8 +10,12 @@ interface KuralCardProps {
   isVisible: boolean;
 }
 
+interface InterpretationResponse {
+  interpretation: string;
+}
+
 export function KuralCard({ kural, isVisible }: KuralCardProps) {
-  const { data: interpretationData, isLoading } = useQuery({
+  const { data: interpretationData, isLoading } = useQuery<InterpretationResponse>({
     queryKey: [`/api/kurals/${kural.id}/interpretation`],
     enabled: isVisible && !kural.aiInterpretation
   });
@@ -30,7 +34,7 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
           className="absolute inset-0 bg-cover bg-center opacity-[0.03] mix-blend-overlay animate-gradient"
           style={{ backgroundImage: `url(${kural.backgroundImage})` }}
         />
-        <CardContent className="h-full flex flex-col justify-center max-w-3xl mx-auto px-6 py-8 md:px-12 relative z-10">
+        <CardContent className="h-full flex flex-col justify-center max-w-3xl mx-auto px-6 pb-24 pt-12 md:px-12 md:pb-32 relative z-10">
           <div className="space-y-8 scrollbar-hide">
             <div className="space-y-6">
               <div className="space-y-2">
@@ -59,7 +63,7 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
               </div>
               <div className="relative flex justify-start">
                 <span className="pr-3 bg-gradient-to-br from-slate-900 to-slate-800 text-sm font-medium text-primary/80">
-                  Modern Interpretation
+                  LLM Says ..
                 </span>
               </div>
             </div>
@@ -83,7 +87,7 @@ export function KuralCard({ kural, isVisible }: KuralCardProps) {
           </div>
 
           <motion.div 
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-slate-500"
+            className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-slate-500 md:bottom-16"
             initial={{ opacity: 0.5 }}
             animate={{ 
               opacity: [0.5, 1, 0.5],

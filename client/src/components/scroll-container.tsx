@@ -21,18 +21,17 @@ interface ScrollContainerProps {
   onKuralChange?: (kuralNumber: number) => void;
 }
 
-export function ScrollContainer({ 
-  kurals, 
-  isLoading, 
+export function ScrollContainer({
+  kurals,
+  isLoading,
   initialKuralNumber = 1,
-  onKuralChange 
+  onKuralChange
 }: ScrollContainerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [kuralNumber, setKuralNumber] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Initialize to correct kural
   useEffect(() => {
     if (!isLoading && kurals.length > 0 && initialKuralNumber > 1) {
       const index = kurals.findIndex(k => k.number === initialKuralNumber);
@@ -57,14 +56,12 @@ export function ScrollContainer({
     const cardHeight = container.clientHeight;
     const newIndex = Math.floor(scrollPosition / cardHeight);
 
-    // Only update if we have a valid new index
     if (newIndex !== currentIndex && newIndex >= 0 && newIndex < kurals.length) {
       setCurrentIndex(newIndex);
       onKuralChange?.(kurals[newIndex].number);
     }
   }, [currentIndex, kurals.length, onKuralChange, kurals]);
 
-  // Smooth scroll to a specific kural
   const scrollToKural = useCallback((index: number) => {
     if (!containerRef.current) return;
 
@@ -77,7 +74,6 @@ export function ScrollContainer({
     });
   }, []);
 
-  // Handle kural number input submission
   const handleGoToKural = (e: React.FormEvent) => {
     e.preventDefault();
     const number = parseInt(kuralNumber);
@@ -102,7 +98,6 @@ export function ScrollContainer({
     }
   }, [handleScroll]);
 
-  // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowDown' && currentIndex < kurals.length - 1) {
@@ -156,22 +151,20 @@ export function ScrollContainer({
         </DialogContent>
       </Dialog>
 
-      {/* GitHub credit link moved to bottom right */}
       <a
         href="https://github.com/tk120404/thirukkural"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-4 right-4 z-50 flex items-center gap-2 px-3 py-1.5 text-[10px] sm:text-xs bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors"
+        className="fixed bottom-safe right-4 z-50 flex items-center gap-2 px-3 py-1.5 text-[10px] sm:text-xs bg-slate-800 text-white rounded-md hover:bg-slate-700 transition-colors"
       >
         <Github className="w-3 h-3 sm:w-4 sm:h-4" />
         <span>Thirukkural Dataset Source</span>
       </a>
 
-      {/* Developer credit moved to bottom left */}
-      <div className="fixed bottom-4 left-4 z-50 text-[10px] sm:text-xs text-gray-500">
-        Developed by <a 
-          href="https://twitter.com/karthikeyansuku" 
-          target="_blank" 
+      <div className="fixed bottom-safe left-4 z-50 text-[10px] sm:text-xs text-gray-500">
+        Developed by <a
+          href="https://twitter.com/karthikeyansuku"
+          target="_blank"
           rel="noopener noreferrer"
           className="text-primary hover:underline"
         >
@@ -181,7 +174,7 @@ export function ScrollContainer({
 
       <div
         ref={containerRef}
-        className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-background scrollbar-hide"
+        className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-background scrollbar-hide pb-safe"
         onScroll={handleScroll}
       >
         <AnimatePresence>
