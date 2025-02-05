@@ -12,8 +12,6 @@ interface ScrollContainerProps {
 export function ScrollContainer({ kurals, isLoading }: ScrollContainerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const scrollTimeout = useRef<NodeJS.Timeout>();
 
   const handleScroll = useCallback(() => {
     if (!containerRef.current) return;
@@ -21,33 +19,19 @@ export function ScrollContainer({ kurals, isLoading }: ScrollContainerProps) {
     const container = containerRef.current;
     const scrollPosition = container.scrollTop;
     const cardHeight = container.clientHeight;
-    const newIndex = Math.round(scrollPosition / cardHeight);
+    const newIndex = Math.floor(scrollPosition / cardHeight);
 
     // Only update if we have a valid new index
     if (newIndex !== currentIndex && newIndex >= 0 && newIndex < kurals.length) {
       setCurrentIndex(newIndex);
-
-      // Set scrolling state with a shorter timeout
-      setIsScrolling(true);
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
-      scrollTimeout.current = setTimeout(() => {
-        setIsScrolling(false);
-      }, 50); // Reduced from 100ms to 50ms for even faster interpretation loading
     }
   }, [currentIndex, kurals.length]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
-      container.addEventListener('scroll', handleScroll, { passive: true });
-      return () => {
-        container.removeEventListener('scroll', handleScroll);
-        if (scrollTimeout.current) {
-          clearTimeout(scrollTimeout.current);
-        }
-      };
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
     }
   }, [handleScroll]);
 
@@ -58,37 +42,22 @@ export function ScrollContainer({ kurals, isLoading }: ScrollContainerProps) {
   return (
     <div
       ref={containerRef}
-      className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth"
+      className="h-screen overflow-y-scroll snap-y snap-mandatory"
       onScroll={handleScroll}
-      style={{
-        scrollBehavior: 'smooth',
-        WebkitOverflowScrolling: 'touch'
-      }}
     >
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {kurals.map((kural, index) => (
           <motion.div
             key={kural.id}
-            className="snap-start h-screen bg-background"
+            className="snap-start h-screen"
             initial={{ opacity: 0 }}
-            animate={{ 
-              opacity: 1,
-              transition: {
-                duration: 0.5,
-                ease: "easeInOut"
-              }
-            }}
-            exit={{ 
-              opacity: 0,
-              transition: {
-                duration: 0.3,
-                ease: "easeInOut"
-              }
-            }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
           >
             <KuralCard
               kural={kural}
-              isVisible={index === currentIndex && !isScrolling}
+              isVisible={index === currentIndex}
             />
           </motion.div>
         ))}
