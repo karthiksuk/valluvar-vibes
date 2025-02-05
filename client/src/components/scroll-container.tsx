@@ -20,7 +20,13 @@ export function ScrollContainer({ kurals: initialKurals, hasMore: initialHasMore
   // Initialize allKurals when initialKurals change
   useEffect(() => {
     if (initialKurals.length > 0) {
-      setAllKurals(initialKurals);
+      setAllKurals(prevKurals => {
+        // Only add new kurals that aren't already in the list
+        const newKurals = initialKurals.filter(
+          newKural => !prevKurals.some(existingKural => existingKural.id === newKural.id)
+        );
+        return [...prevKurals, ...newKurals];
+      });
     }
   }, [initialKurals]);
 
@@ -33,7 +39,13 @@ export function ScrollContainer({ kurals: initialKurals, hasMore: initialHasMore
   // Update allKurals when new data arrives
   useEffect(() => {
     if (nextPageData?.kurals && !isFetching && currentIndex >= allKurals.length - 2) {
-      setAllKurals(prev => [...prev, ...nextPageData.kurals]);
+      setAllKurals(prev => {
+        // Only add new kurals that aren't already in the list
+        const newKurals = nextPageData.kurals.filter(
+          newKural => !prev.some(existingKural => existingKural.id === newKural.id)
+        );
+        return [...prev, ...newKurals];
+      });
       setPage(p => p + 1);
     }
   }, [nextPageData, isFetching, currentIndex, allKurals.length]);
@@ -48,8 +60,21 @@ export function ScrollContainer({ kurals: initialKurals, hasMore: initialHasMore
 
     if (newIndex !== currentIndex && newIndex >= 0 && newIndex < allKurals.length) {
       setCurrentIndex(newIndex);
+
+      // If we're near the end, this will trigger the next page fetch
+      if (newIndex >= allKurals.length - 2) {
+        console.log('Near end, should fetch more:', { newIndex, total: allKurals.length });
+      }
     }
   }, [currentIndex, allKurals.length]);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('scroll', handleScroll);
+      return () => container.removeEventListener('scroll', handleScroll);
+    }
+  }, [handleScroll]);
 
   if (initialLoading || allKurals.length === 0) {
     return <LoadingCard />;

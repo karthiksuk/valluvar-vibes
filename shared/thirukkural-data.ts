@@ -1,82 +1,36 @@
-export const thirukkuralData = [
-  {
-    number: 1,
-    tamil: "அகர முதல எழுத்தெல்லாம் ஆதி\nபகவன் முதற்றே உலகு",
-    english: "A, as its first of letters, every speech maintains;\nThe Primal Deity is first through all the world's domains.",
-    section: "அறத்துப்பால்",
-    chapter: "கடவுள் வாழ்த்து",
-    chapterGroup: "பாயிரவியல்"
-  },
-  {
-    number: 2,
-    tamil: "கற்றதனால் ஆய பயனென்கொல் வாலறிவன்\nநற்றாள் தொழாஅர் எனின்",
-    english: "What profit have those derived from learning,\nIf they worship not the good feet of Him who is perfect in knowledge",
-    section: "அறத்துப்பால்",
-    chapter: "கடவுள் வாழ்த்து",
-    chapterGroup: "பாயிரவியல்"
-  },
-  {
-    number: 3,
-    tamil: "மலர்மிசை ஏகினான் மாணடி சேர்ந்தார்\nநிலமிசை நீடுவாழ் வார்",
-    english: "Long live on earth who tread path of Him, who o'er the flower hath gone",
-    section: "அறத்துப்பால்",
-    chapter: "கடவுள் வாழ்த்து",
-    chapterGroup: "பாயிரவியல்"
-  },
-  {
-    number: 4,
-    tamil: "வேண்டுதல் வேண்டாமை இலானடி சேர்ந்தார்க்கு\nயாண்டும் இடும்பை இல",
-    english: "Who hold his feet who likes nor loathing knows, through every world\nWhere'er they go, no troubles know.",
-    section: "அறத்துப்பால்",
-    chapter: "கடவுள் வாழ்த்து",
-    chapterGroup: "பாயிரவியல்"
-  },
-  {
-    number: 5,
-    tamil: "இருள்சேர் இருவினையும் சேரா இறைவன்\nபொருள்சேர் புகழ்புரிந்தார் மாட்டு",
-    english: "The dark of deeds that cling and coil round souls shall not adhere\nTo those who at His feet whose praise is sure have made their own.",
-    section: "அறத்துப்பால்",
-    chapter: "கடவுள் வாழ்த்து",
-    chapterGroup: "பாயிரவியல்"
-  },
-  {
-    number: 98,
-    tamil: "நன்றி மறப்பது நன்றன்று நன்றல்லது\nஅன்றே மறப்பது நன்று",
-    english: "To forget good is not good; it is good to forget at once what is not good.",
-    section: "அறத்துப்பால்",
-    chapter: "நன்றி",
-    chapterGroup: "இல்லறவியல்"
-  },
-  {
-    number: 99,
-    tamil: "கொன்றன்ன இன்னா செயினும் அவர்செய்த\nஒன்றுநன்று உள்ளக் கெடும்",
-    english: "Though one inflict injuries as great as murder, they will perish\nBefore his thought of just one good thing (which the injurer may have done to him).",
-    section: "அறத்துப்பால்",
-    chapter: "நன்றி",
-    chapterGroup: "இல்லறவியல்"
-  },
-  {
-    number: 100,
-    tamil: "எந்நன்றி கொன்றார்க்கும் உய்வுண்டாம் உய்வில்லை\nசெய்ந்நன்றி கொன்ற மகற்கு",
-    english: "There is escape for him who has killed every kind of gratitude; there is no escape for him who has killed a benefit.",
-    section: "அறத்துப்பால்",
-    chapter: "நன்றி",
-    chapterGroup: "இல்லறவியல்"
-  },
-  {
-    number: 381,
-    tamil: "படைகுடி கூழ்அமைச்சு நட்புஅரண் ஆறும்\nஉடையான் அரசருள் ஏறு",
-    english: "Who owns these six - army, people, wealth, ministers, friends, fort -\nIs lion among kings who own them not.",
-    section: "பொருட்பால்",
-    chapter: "இறைமாட்சி",
-    chapterGroup: "அரசியல்"
-  },
-  {
-    number: 1081,
-    tamil: "அறிதோறு அறியாமை கண்டற்றால் காமம்\nசெறிதோறும் சேயிழை மாட்டு",
-    english: "As folly meets his view the more he learns,\nTo him who loveth more and more, his loved one's sweetness shows increase each hour.",
-    section: "காமத்துப்பால்",
-    chapter: "தகையணங்குறுத்தல்",
-    chapterGroup: "களவியல்"
+import thirukkuralDataset from "./thirukkural.json";
+import detailData from "./detail.json";
+
+function findMetadata(number: number, details: any) {
+  for (const section of details.section.detail) {
+    for (const chapterGroup of section.chapterGroup.detail) {
+      for (const chapter of chapterGroup.chapters.detail) {
+        if (number >= chapter.start && number <= chapter.end) {
+          return {
+            section: section.name,
+            chapterGroup: chapterGroup.name,
+            chapter: chapter.name
+          };
+        }
+      }
+    }
   }
-] as const;
+  return null;
+}
+
+// Transform the raw data into our expected format
+const kuralsArray = Array.isArray(thirukkuralDataset) ? thirukkuralDataset : thirukkuralDataset.kural || [];
+export const thirukkuralData = kuralsArray.map(kural => {
+  const number = kural.Number || kural.number;
+  const metadata = findMetadata(number, detailData[0]);
+
+  return {
+    number,
+    tamil: kural.Line1 && kural.Line2 ? `${kural.Line1}\n${kural.Line2}` : kural.tamil,
+    english: kural.Translation || kural.english,
+    section: metadata?.section || "",
+    chapter: metadata?.chapter || "",
+    chapterGroup: metadata?.chapterGroup || "",
+    explanation: kural.explanation || kural.mv || "",
+  };
+}).sort((a, b) => a.number - b.number);
