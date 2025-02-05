@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Search } from "lucide-react";
+import { Search, Github } from "lucide-react";
 
 interface ScrollContainerProps {
   kurals: Kural[];
@@ -138,9 +138,10 @@ export function ScrollContainer({
               href="https://github.com/tk120404/thirukkural"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-gray-500 hover:text-primary transition-colors"
+              className="flex items-center gap-2 px-3 py-1 text-xs bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors"
             >
-              Thirukkural data source
+              <Github className="w-4 h-4" />
+              <span>Thirukkural Dataset Source</span>
             </a>
           </div>
         </DialogTrigger>
