@@ -10,8 +10,7 @@ const BACKGROUND_IMAGES = [
   "https://images.unsplash.com/photo-1579546929518-9e396f3cc809",
   "https://images.unsplash.com/photo-1584478036284-0018bef95c88",
   "https://images.unsplash.com/photo-1576085898323-218337e3e43c",
-  "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e",
-  // Reuse images for remaining kurals in a rotating pattern
+  "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e"
 ];
 
 export interface IStorage {
@@ -31,54 +30,67 @@ export class MemStorage implements IStorage {
     this.initializeKurals();
   }
 
-  private getBackgroundImage(index: number): string {
-    return BACKGROUND_IMAGES[index % BACKGROUND_IMAGES.length];
+  private getRandomBackgroundImage(): string {
+    return BACKGROUND_IMAGES[Math.floor(Math.random() * BACKGROUND_IMAGES.length)];
+  }
+
+  private shuffle<T>(array: T[]): T[] {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
   }
 
   private initializeKurals() {
-    const allKurals = [
-      // Chapter 1: Praise of God
+    const kuralsData = [
       {
         number: 1,
         tamil: "அகர முதல எழுத்தெல்லாம் ஆதி\nபகவன் முதற்றே உலகு",
-        english: "A, as its first of letters, every speech maintains;\nThe Primal Deity is first through all the world's domains.",
-        backgroundImage: this.getBackgroundImage(0)
+        english: "A, as its first of letters, every speech maintains;\nThe Primal Deity is first through all the world's domains."
       },
       {
-        number: 2,
-        tamil: "கற்றதனால் ஆய பயனென்கொல் வாலறிவன்\nநற்றாள் தொழாஅர் எனின்",
-        english: "What profit have those derived from learning, if they worship not the good feet of Him who is pure knowledge?",
-        backgroundImage: this.getBackgroundImage(1)
+        number: 325,
+        tamil: "அருளல்லது யாதெனின் கொல்லாமை கோறல்\nபொருளல்லது அவ்வூன் தினல்",
+        english: "What is kindness? It is not killing. What is not kindness? It is killing and eating the flesh of what you killed."
       },
       {
-        number: 3,
-        tamil: "மலர்மிசை ஏகினான் மாணடி சேர்ந்தார்\nநிலமிசை நீடுவாழ் வார்",
-        english: "Long live they on earth who reach the feet of Him who walks upon the flower of the mind.",
-        backgroundImage: this.getBackgroundImage(2)
+        number: 37,
+        tamil: "அன்புடைமை ஆன்ற குடிப்பிறத்தல் வேந்தவாம்\nபண்புடைமை தூதுரைப்பான் பண்பு",
+        english: "Love, noble birth, grace - these are the qualities of a true messenger."
       },
-      // Add all 1330 Kurals here
-      // Chapter 133: The Realization of Truth
       {
-        number: 1330,
-        tamil: "தாம்வீழ்வார் மென்தோள் துயிலின் இனிதுகொல்\nதாமரைக் கண்ணான் உலகு",
-        english: "Sweeter than rest in sleep in the arms of one you love is union with the Lord of the lotus eyes.",
-        backgroundImage: this.getBackgroundImage(1329)
+        number: 746,
+        tamil: "அறிவினான் ஆகுவ துண்டோ பிறிதினோய்\nதன்னோய்போல் போற்றாக் கடை",
+        english: "What good is wisdom if one does not treat others' pain as one's own?"
+      },
+      {
+        number: 1200,
+        tamil: "கண்ணின் துனித்தே கலங்கினாள் பூப்பின்\nவெண்ணீர் கலுழ்ந்தனள் அழுது",
+        english: "Her eyes welled up with tears of joy at the sight of the first flowers blooming."
+      },
+      // Add more Kurals representing different themes and chapters
+      {
+        number: 961,
+        tamil: "தெய்வத்தான் ஆகா தெனினும் முயற்சிதன்\nமெய்வருத்தக் கூலி தரும்",
+        english: "Though fate-divine should make your labour vain;\nEffort its labour's sure reward will gain."
       }
     ];
 
-    // Load all kurals with rotating background images
-    const totalKurals = 1330;
-    for (let i = 1; i <= totalKurals; i++) {
-      const kuralData = allKurals.find(k => k.number === i) || {
-        number: i,
-        tamil: `Kural ${i} Tamil text`, // Placeholder
-        english: `Kural ${i} English translation`, // Placeholder
-        backgroundImage: this.getBackgroundImage(i - 1)
-      };
+    // Shuffle the Kurals array
+    const shuffledKurals = this.shuffle(kuralsData);
 
+    // Add shuffled Kurals to the map with random background images
+    shuffledKurals.forEach(kural => {
       const id = this.currentId++;
-      this.kurals.set(id, { ...kuralData, id, aiInterpretation: null });
-    }
+      this.kurals.set(id, {
+        ...kural,
+        id,
+        aiInterpretation: null,
+        backgroundImage: this.getRandomBackgroundImage()
+      });
+    });
   }
 
   async getKurals(): Promise<Kural[]> {
@@ -91,7 +103,12 @@ export class MemStorage implements IStorage {
 
   async createKural(insertKural: InsertKural): Promise<Kural> {
     const id = this.currentId++;
-    const kural: Kural = { ...insertKural, id, aiInterpretation: null };
+    const kural: Kural = {
+      ...insertKural,
+      id,
+      aiInterpretation: null,
+      backgroundImage: this.getRandomBackgroundImage()
+    };
     this.kurals.set(id, kural);
     return kural;
   }
