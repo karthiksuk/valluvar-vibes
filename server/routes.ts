@@ -3,14 +3,27 @@ import { createServer, type Server } from "http";
 import { thirukkuralData } from "../shared/thirukkural-data";
 import { generateKuralInterpretation } from "./openai";
 
+const BACKGROUND_IMAGES = [
+  "https://images.unsplash.com/photo-1471666875520-c75081f42081",
+  "https://images.unsplash.com/photo-1459908676235-d5f02a50184b",
+  "https://images.unsplash.com/photo-1577083552792-a0d461cb1dd6",
+  "https://images.unsplash.com/photo-1578301978018-3005759f48f7",
+  "https://images.unsplash.com/photo-1503455637927-730bce583c0",
+  "https://images.unsplash.com/photo-1487088678257-3a541e6e3922"
+];
+
+function getRandomBackgroundImage(): string {
+  return BACKGROUND_IMAGES[Math.floor(Math.random() * BACKGROUND_IMAGES.length)];
+}
+
 export function registerRoutes(app: Express): Server {
   app.get("/api/kurals", async (req, res) => {
     try {
       // Map the data to include background images
       const kurals = thirukkuralData.map(kural => ({
-        id: kural.number,
         ...kural,
-        backgroundImage: "https://images.unsplash.com/photo-1471666875520-c75081f42081"
+        id: kural.number,
+        backgroundImage: getRandomBackgroundImage()
       }));
 
       res.json({ kurals });

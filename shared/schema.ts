@@ -1,29 +1,21 @@
-import { pgTable, text, serial, integer } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const kurals = pgTable("kurals", {
-  id: serial("id").primaryKey(),
-  number: integer("number").notNull(),
-  tamil: text("tamil").notNull(),
-  english: text("english").notNull(),
-  section: text("section").notNull(),
-  chapter: text("chapter").notNull(),
-  chapterGroup: text("chapter_group").notNull(),
-  explanation: text("explanation"),
-  aiInterpretation: text("ai_interpretation"),
-  backgroundImage: text("background_image").notNull(),
-  transliteration: text("transliteration"),
-  translation: text("translation")
+// Types for the Kural data
+export const kuralSchema = z.object({
+  number: z.number(),
+  tamil: z.string(),
+  english: z.string(),
+  section: z.string(),
+  chapter: z.string(),
+  chapterGroup: z.string(),
+  explanation: z.string().optional(),
+  aiInterpretation: z.string().optional(),
+  backgroundImage: z.string(),
+  transliteration: z.string().optional(),
+  translation: z.string().optional()
 });
 
-export const insertKuralSchema = createInsertSchema(kurals).omit({ 
-  id: true,
-  aiInterpretation: true 
-});
-
-export type InsertKural = z.infer<typeof insertKuralSchema>;
-export type Kural = typeof kurals.$inferSelect;
+export type Kural = z.infer<typeof kuralSchema>;
 
 // Types for the metadata from detail.json
 export interface ChapterDetail {
